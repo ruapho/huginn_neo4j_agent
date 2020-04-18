@@ -9,5 +9,12 @@ describe Agents::Neo4jAgent do
     @checker.save!
   end
 
-  pending "add specs here"
+  describe "#validate_options" do
+    context "This is a test" do
+      it "blablabla" do
+        expect(true).to eq true
+      end
+    end
+  end
+
 end

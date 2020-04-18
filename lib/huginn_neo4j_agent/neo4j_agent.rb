@@ -1,23 +1,45 @@
 module Agents
   class Neo4jAgent < Agent
-    default_schedule '12h'
+
+    include FormConfigurable
+
+    can_dry_run!
+    no_bulk_receive!
+    default_schedule 'never'
 
     description <<-MD
-      Add a Agent description here
+      Run custom cypher query.
+
+      `connection_url`:
+
+      - from credentials:
+
+          {% credential neo4j_connection %}
+
+      - from string:
+
+          bolt://localhost:7687
+
+      `cypher` - custom cypher query
+
+        MATCH (n) RETURN n.name
     MD
 
     def default_options
       {
+          'connection_url' => 'bolt://localhost:7687',
+          'cypher' => 'MATCH (n) RETURN n.name'
       }
     end
 
+    form_configurable :connection_url
+    form_configurable :sql, type: :text, ace: { mode: 'cypher', theme: '' }
+    
     def validate_options
     end
 
     def working?
-      # Implement me! Maybe one of these next two lines would be a good fit?
-      # checked_without_error?
-      # received_event_without_error?
+      !recent_error_logs?
     end
 
 #    def check
